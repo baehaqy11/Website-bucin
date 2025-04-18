@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website Bucin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-image: url('https://i.imgur.com/GBvyWtI.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+      font-weight: 600;
+    }
+    main {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    h1, p, .mode-text {
+      animation: fadeIn 2s ease-in-out forwards;
+      opacity: 0;
+      font-weight: 600;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .quote {
+      margin: 20px;
+      font-size: 1.1em;
+      font-style: italic;
+      font-weight: 600;
+      text-align: center;
+    }
+    button, select, input, textarea {
+      padding: 12px 24px;
+      font-size: 1em;
+      margin: 6px;
+      background-color: rgba(255, 255, 255, 0.5);
+      color: black;
+      border: 2px solid black;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s;
+      z-index: 2;
+      position: relative;
+      font-weight: 600;
+    }
+    button:hover {
+      transform: scale(1.1);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+    input, textarea {
+      background: rgba(255,255,255,0.4);
+      color: black;
+      border: 1px solid black;
+      width: 100%;
+      max-width: 400px;
+    }
+    textarea {
+      height: 100px;
+      resize: none;
+    }
+    .hearts {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hearts span {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: hotpink;
+      transform: rotate(45deg);
+      animation: float 10s infinite;
+    }
+    .hearts span::before,
+    .hearts span::after {
+      content: '';
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: hotpink;
+      border-radius: 50%;
+    }
+    .hearts span::before {
+      top: -8px;
+      left: 0;
+    }
+    .hearts span::after {
+      top: 0;
+      left: -8px;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes emotBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+    }
+    .popup-emot {
+      display: inline-block;
+      margin-left: 10px;
+      animation: emotBounce 1s infinite;
+    }
+    #popup {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(255, 105, 180, 0.9);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 20px;
+      font-size: 1.1em;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 999;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #popup.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="hearts">
+    <span style="left:10%; animation-delay:0s"></span>
+    <span style="left:30%; animation-delay:2s"></span>
+    <span style="left:50%; animation-delay:4s"></span>
+    <span style="left:70%; animation-delay:1s"></span>
+    <span style="left:90%; animation-delay:3s"></span>
+  </div>
+  <main>
+    <h1>Hai Cintaku!</h1>
+    <p>Aku cuma mau bilang... Aku sayang banget sama kamu!</p>
+    <div class="quote" id="quote">Kamu adalah alasan aku senyum tiap hari.</div>
+    <button onclick="nextQuote()">Kata Bucin Lagi</button>
+
+    <div>
+      <input id="customMsg" placeholder="Tulis pesan custom..." />
+      <button onclick="sendWA()">Kirim ke WhatsApp</button>
+    </div>
+
+    <div>
+      <label for="mode">Pilih Mode:</label>
+      <select id="mode" onchange="changeMode()">
+        <option value="bucin">Bucin</option>
+        <option value="galak">Galak</option>
+        <option value="lucu">Lucu</option>
+      </select>
+    </div>
+
+    <p class="mode-text" id="modeText">Mode: Bucin</p>
+    <p id="countdown"></p>
+
+    <div>
+      <label for="jadian">Tanggal Jadian:</label>
+      <input type="date" id="jadian" onchange="hitungHari()">
+      <p id="hariJadian"></p>
+    </div>
+
+    <div>
+      <textarea id="namaSurat" placeholder="Masukkan nama doi..."></textarea>
+      <button onclick="buatSurat()">Buat Surat Cinta</button>
+      <p id="hasilSurat"></p>
+    </div>
+
+    <button onclick="document.getElementById('musik').play()">Putar Musik</button>
+<audio id="musik" loop>
+  <source src="Kehadiranmu.mp3" type="audio/mpeg">
+</audio>
+
+    <div id="popup"></div>
+    <button onclick="alert('Aku juga sayang kamu!')">Aku juga sayang kamu!</button>
+    <button onclick="document.getElementById('rahasia').classList.toggle('hidden')">Tombol Rahasia</button>
+    <div id="rahasia" class="hidden">
+      <p>Kamu nemuin rahasianya, hebat! Kamu spesial!</p>
+    </div>
+  </main>
+
+  <script>
+    const quotes = {
+      bucin: [
+        "Kamu adalah alasan aku senyum tiap hari.",
+        "Tanpa kamu, kopi pun terasa hambar.",
+        "Aku nggak butuh alarm, cukup kamu aja yang bangunin.",
+        "Kamu mau jadi akhir dari semua pencarianku?"
+      ],
+      galak: [
+        "Kamu tuh ngeselin, tapi kok dirinduin ya?",
+        "Jangan bikin aku marah, nanti makin cinta.",
+        "Dasar nyebelin, kenapa sih kamu bikin deg-degan!"
+      ],
+      lucu: [
+        "Aku rela jadi jomblo, asal sama kamu.",
+        "Kamu tuh kayak wifi... bikin koneksi hati stabil.",
+        "Senyummu kayak token listrik, nyetrum!"
+      ]
+    };
+
+    let currentMode = 'bucin';
+    function nextQuote() {
+      const arr = quotes[currentMode];
+      const random = arr[Math.floor(Math.random() * arr.length)];
+      document.getElementById("quote").textContent = random;
+    }
+
+    function sendWA() {
+      const msg = document.getElementById("customMsg").value;
+      if (!msg.trim()) return alert("Tulis pesan dulu dong!");
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    }
+
+    function changeMode() {
+      const mode = document.getElementById("mode").value;
+      currentMode = mode;
+      document.getElementById("modeText").textContent = "Mode: " + mode.charAt(0).toUpperCase() + mode.slice(1);
+      nextQuote();
+    }
+
+    const targetDate = new Date("2025-07-01T00:00:00").getTime();
+    setInterval(() => {
+      const now = new Date().getTime();
+      const gap = targetDate - now;
+      const days = Math.floor(gap / (1000 * 60 * 60 * 24));
+      document.getElementById("countdown").textContent = `Menuju hari spesial kita: ${days} hari lagi`;
+    }, 1000);
+
+    function hitungHari() {
+      const input = document.getElementById("jadian").value;
+      if (!input) return;
+      const start = new Date(input);
+      const now = new Date();
+      const diffTime = Math.abs(now - start);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      document.getElementById("hariJadian").textContent = `Kita sudah bersama selama ${diffDays} hari!`;
+    }
+
+    function buatSurat() {
+      const nama = document.getElementById("namaSurat").value;
+      if (!nama.trim()) return alert("Masukkan nama dulu dong!");
+      document.getElementById("hasilSurat").textContent = `Hai ${nama}, setiap detik bersamamu adalah hadiah terindah dalam hidupku.`;
+    }
+
+    function toggleLagu() {
+      const audio = document.getElementById("lagu");
+      audio.paused ? audio.play() : audio.pause();
+    }
+
+    const popupText = [
+      "Kamu udah makan belum?",
+      "Lagi ngapain nih sayang?",
+      "Jangan lupa senyum ya!",
+      "Inget aku terus ya~"
+    ];
+    setInterval(() => {
+      const random = popupText[Math.floor(Math.random() * popupText.length)];
+      const popup = document.getElementById("popup");
+      const emot = ["❤️", "😊", "😘", "💖", "🥰"];
+      const randomEmot = emot[Math.floor(Math.random() * emot.length)];
+      popup.innerHTML = `${random} <span class="popup-emot">${randomEmot}</span>`;
+      popup.classList.add("show");
+      setTimeout(() => popup.classList.remove("show"), 3000);
+    }, 10000);
+  </script>
+</body>
+</html>

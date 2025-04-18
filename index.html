@@ -5,9 +5,7 @@
   <title>Website Bucin</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -34,13 +32,8 @@
       font-weight: 600;
       text-align: center;
     }
-    h1 {
-      font-size: 3em;
-    }
-    p {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-    }
+    h1 { font-size: 3em; }
+    p { font-size: 1.2em; margin-bottom: 20px; }
     .quote {
       margin: 20px;
       font-size: 1.1em;
@@ -73,10 +66,7 @@
       width: 100%;
       max-width: 400px;
     }
-    textarea {
-      height: 100px;
-      resize: none;
-    }
+    textarea { height: 100px; resize: none; }
     .hearts {
       position: fixed;
       width: 100%;
@@ -104,14 +94,8 @@
       background: hotpink;
       border-radius: 50%;
     }
-    .hearts span::before {
-      top: -8px;
-      left: 0;
-    }
-    .hearts span::after {
-      top: 0;
-      left: -8px;
-    }
+    .hearts span::before { top: -8px; left: 0; }
+    .hearts span::after { top: 0; left: -8px; }
     @keyframes float {
       0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
       50% { opacity: 1; }
@@ -141,6 +125,15 @@
     #popup.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
+    }
+    .popup-emot {
+      display: inline-block;
+      animation: goyang 1s infinite alternate;
+      margin-left: 8px;
+    }
+    @keyframes goyang {
+      0% { transform: rotate(-15deg) scale(1.1); }
+      100% { transform: rotate(15deg) scale(1.2); }
     }
     .hidden { display: none; }
   </style>
@@ -189,11 +182,15 @@
     </div>
 
     <button onclick="document.getElementById('musik').play()">Putar Musik</button>
-<audio id="musik" loop>
-  <source src="Kehadiranmu.mp3" type="audio/mpeg">
-</audio>
+    <audio id="musik" loop>
+      <source src="Kehadiranmu.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="popup"></div>
+    <audio id="popupSound">
+      <source src="https://www.myinstants.com/media/sounds/pop-up.mp3" type="audio/mpeg">
+    </audio>
+
     <button onclick="alert('Aku juga sayang kamu!')">Aku juga sayang kamu!</button>
     <button onclick="document.getElementById('rahasia').classList.toggle('hidden')">Tombol Rahasia</button>
     <div id="rahasia" class="hidden">
@@ -279,8 +276,15 @@
     setInterval(() => {
       const random = popupText[Math.floor(Math.random() * popupText.length)];
       const popup = document.getElementById("popup");
-      popup.textContent = random;
+      const emot = ["❤️", "😊", "😘", "💖", "🥰"];
+      const randomEmot = emot[Math.floor(Math.random() * emot.length)];
+      popup.innerHTML = `${random} <span class="popup-emot">${randomEmot}</span>`;
       popup.classList.add("show");
+
+      const sound = document.getElementById("popupSound");
+      sound.currentTime = 0;
+      sound.play();
+
       setTimeout(() => popup.classList.remove("show"), 3000);
     }, 10000);
   </script>
